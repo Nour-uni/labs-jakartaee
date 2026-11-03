@@ -5,6 +5,9 @@
 <c:if test="${not empty confirmationName}">
     <p><strong>Thank you, ${confirmationName}! Your order is confirmed.</strong></p>
 </c:if>
+<c:if test="${not empty error}">
+    <p style="color:red"><strong>${error}</strong></p>
+</c:if>
 <form method="post" action="${pageContext.request.contextPath}/checkout">
     <p>Name: <input name="name" required></p>
     <p>Email: <input type="email" name="email" required></p>

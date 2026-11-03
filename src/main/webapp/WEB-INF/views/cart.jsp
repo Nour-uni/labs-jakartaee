@@ -4,12 +4,14 @@
 <jsp:include page="header.jsp" />
 <h2>Your cart</h2>
 <c:choose>
-    <c:when test="${not empty sessionScope.cart}">
+    <c:when test="${not empty cart}">
         <ul>
-            <c:forEach var="item" items="${sessionScope.cart}">
+            <c:forEach var="item" items="${cart}">
                 <li>${item.name} - <fmt:formatNumber value="${item.price}" type="currency"/></li>
             </c:forEach>
         </ul>
+        <p><strong>Total after 10% discount:
+            <fmt:formatNumber value="${discountedTotal}" type="currency"/></strong></p>
         <a href="${pageContext.request.contextPath}/checkout">Proceed to checkout</a>
     </c:when>
     <c:otherwise><p>Your cart is empty.</p></c:otherwise>

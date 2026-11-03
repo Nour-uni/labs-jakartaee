@@ -1,12 +1,21 @@
 package com.horizon.lab2.web;
 
+import com.horizon.lab2.service.EmptyCartException;
+import com.horizon.lab2.service.OrderService;
+import jakarta.inject.Inject;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
-import jakarta.servlet.http.*;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 @WebServlet("/checkout")
 public class CheckoutServlet extends HttpServlet {
+
+    @Inject
+    private OrderService orderService;
+
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
@@ -20,8 +29,12 @@ public class CheckoutServlet extends HttpServlet {
         String email = req.getParameter("email");
         String address = req.getParameter("address");
 
-        req.getSession().removeAttribute("cart");
-        req.setAttribute("confirmationName", name);
+        try {
+            orderService.createOrder(name, email, address);
+            req.setAttribute("confirmationName", name);
+        } catch (EmptyCartException e) {
+            req.setAttribute("error", e.getMessage());
+        }
         req.getRequestDispatcher("/WEB-INF/views/checkout.jsp").forward(req, resp);
     }
 }
